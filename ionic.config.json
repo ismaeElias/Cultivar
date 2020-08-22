@@ -1,0 +1,7 @@
+{
+  "name": "Cultivar",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
