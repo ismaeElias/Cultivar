@@ -1,9 +1,33 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>menu</ion-title>
+<ion-header [translucent]="true">
+  <ion-toolbar >
+    <ion-title class="headerMenu">
+      Cultivar
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [fullscreen]="true">
+
+  <ion-list>
+    <ion-item>
+        <ion-icon name="bulb-outline" class="icon"></ion-icon>
+        <h2>Iluminação</h2>
+        <ion-toggle slot="end" (ionChange)="checkIluminacao($event.detail)" [checked]="isCheckIluminacao"></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="water-outline" class="icon"></ion-icon>
+      <h2>Irrigação</h2>
+      <ion-toggle slot="end" (ionChange)="checkIrrigacao($event.detail)" [checked]="isCheckIrrigacao"></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="aperture-outline" class="icon"></ion-icon>
+      <h2>Temperatura</h2>
+      <ion-toggle slot="end" (ionChange)="checkTemperatura($event.detail)" [checked]="isCheckTemperatura"></ion-toggle>
+    </ion-item>
+  </ion-list>
 
 </ion-content>
+
+<ion-footer>
+  <ion-button expand="block" class="button-footer">Status</ion-button>
+</ion-footer>

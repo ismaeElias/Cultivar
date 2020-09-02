@@ -27,11 +27,11 @@
           {{device.name || device.address}}
         </span>
       </ion-item>
-      <ion-spinner name="crescent" *ngIf="gettingDevices" class="spinner"></ion-spinner>
+      <ion-spinner  *ngIf="gettingDevices" class="spinner"></ion-spinner>
     </ion-list>
   </div>
 </ion-content>
 
 <ion-footer>
-  <ion-button expand="block" (click)="startScanning()">Procurar dispositivos</ion-button>
+  <ion-button expand="block" (click)="startScanning()" class="button-footer">Procurar dispositivos</ion-button>
 </ion-footer>

@@ -1,9 +1,19 @@
 ion-toolbar{
-  --background:#42AAE9;
+  --background:#0496DB;
 }
 
-ion-toolbar .title {
-  color: white;
+ion-content{
+  --background :  linear-gradient(180deg, rgba(48,220,238,1) 51%, rgba(112,240,254,1) 64%, rgba(250,250,250,1) 100%);
+}
+
+ion-list{
+  padding: 0;
+}
+
+ion-title{
+  text-align: center;
+  font-weight: bold;
+  color: #2B2B2B;
 }
 .container {
   font-family: 'Poppins', sans-serif;
@@ -11,16 +21,19 @@ ion-toolbar .title {
 }
 
 .list-header { 
-  background-color: #42AAE9;
-  border-bottom: 1px solid #C4C4C5;
-  color: white;
+  background-color: #0496DB;
+  color: #2B2B2B;
   width: 100vw; 
 }
 
 .spinner{
   margin-top: 10px;
+  background-color: transparent;
+  --color: #0DC7DB;
 }
 
-ion-button {
-  --background: #42AAE9;
+.button-footer{
+  --background: #0DC7DB;
+  color: #2B2B2B ;
 }
+
