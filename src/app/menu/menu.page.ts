@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BluetoothSerial } from '@ionic-native/bluetooth-serial/ngx';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-menu',
@@ -9,16 +9,24 @@ import { AlertController } from '@ionic/angular';
 })
 export class MenuPage implements OnInit {
 
-
+  output: string = ""; 
   isCheckTemperatura: boolean = false;
   isCheckIluminacao: boolean = false;
   isCheckIrrigacao: boolean = false;
+  readOk: boolean;
 
-  constructor(private bluetoothSerial: BluetoothSerial, private alertController: AlertController) { }
+  constructor(private bluetoothSerial: BluetoothSerial, private alertController: AlertController,public toastController: ToastController) { }
 
   ngOnInit() {
     /* this.alertSincronizacao()*/
   }
+
+  showStatus() {
+    this.bluetoothSerial.write('MostrarStatus');
+    this.alertSincronizacao();
+  }
+
+  
 
   checkTemperatura(event) {
     if (event.checked) {
@@ -53,7 +61,23 @@ export class MenuPage implements OnInit {
           text: 'Confirmar',
           role: 'confirmar',
           handler: () => {
-            console.log('Cancel clicked');
+              this.bluetoothSerial.isConnected()
+              .then(data => {
+                this.bluetoothSerial.read().then(async data => {  
+                  this.output += "\r\n\r\nRead : " + data;
+                  const toast = await this.toastController.create({
+                    message: data,
+                    duration: 2000
+                  });
+                  toast.present();
+                },
+                error =>{
+                  this.output += "\r\nRead Error : " + JSON.stringify(error);    
+                });
+              })
+              .catch(error => {
+                this.output += "\r\nBT disconnected";
+              });
           }
         },
         {
@@ -64,8 +88,4 @@ export class MenuPage implements OnInit {
     await alert.present();
   }
 
-  sendBluetooth() {
-    this.bluetoothSerial.write('Funcionou garai!');
-    alert('Clicou');
-  }
 }
