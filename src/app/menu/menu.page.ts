@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BluetoothSerial } from '@ionic-native/bluetooth-serial/ngx';
-import { AlertController, ToastController } from '@ionic/angular';
+import {  ModalController, ToastController } from '@ionic/angular';
+import { ModalStatusComponent } from '../modal-status/modal-status.component';
 
 @Component({
   selector: 'app-menu',
@@ -9,24 +10,34 @@ import { AlertController, ToastController } from '@ionic/angular';
 })
 export class MenuPage implements OnInit {
 
-  output: string = ""; 
+  output: string = "";
   isCheckTemperatura: boolean = false;
   isCheckIluminacao: boolean = false;
   isCheckIrrigacao: boolean = false;
   readOk: boolean;
+  dadosArduino : any;
 
-  constructor(private bluetoothSerial: BluetoothSerial, private alertController: AlertController,public toastController: ToastController) { }
+  constructor(private bluetoothSerial: BluetoothSerial, 
+              public toastController: ToastController,
+              public modalController: ModalController) { }
 
   ngOnInit() {
-    /* this.alertSincronizacao()*/
-  }
-
-  showStatus() {
     this.bluetoothSerial.write('MostrarStatus');
-    this.alertSincronizacao();
+    this.readData();
   }
 
-  
+  async showStatus() {
+    const modal = await this.modalController.create({
+      component: ModalStatusComponent,
+      componentProps:{
+        'valor' : this.dadosArduino
+      },
+      cssClass : 'modal-status-component-css'
+    });
+    return await modal.present();
+  }
+
+
 
   checkTemperatura(event) {
     if (event.checked) {
@@ -52,40 +63,20 @@ export class MenuPage implements OnInit {
     }
   }
 
-  async alertSincronizacao() {
-    const alert = await this.alertController.create({
-      header: 'Alerta',
-      message: 'Deseja sincronizar os dados ?',
-      buttons: [
-        {
-          text: 'Confirmar',
-          role: 'confirmar',
-          handler: () => {
-              this.bluetoothSerial.isConnected()
-              .then(data => {
-                this.bluetoothSerial.read().then(async data => {  
-                  this.output += "\r\n\r\nRead : " + data;
-                  const toast = await this.toastController.create({
-                    message: data,
-                    duration: 2000
-                  });
-                  toast.present();
-                },
-                error =>{
-                  this.output += "\r\nRead Error : " + JSON.stringify(error);    
-                });
-              })
-              .catch(error => {
-                this.output += "\r\nBT disconnected";
-              });
-          }
+  readData() {
+    this.bluetoothSerial.isConnected()
+      .then(data => {
+        this.bluetoothSerial.read().then( data => {
+          this.dadosArduino = data
         },
-        {
-          text: 'Cancelar',
-        }
-      ]
-    });
-    await alert.present();
+          error => {
+            this.output += "\r\nRead Error : " + JSON.stringify(error);
+          });
+      })
+      .catch(error => {
+        this.output += "\r\nBT disconnected";
+      });
   }
+
 
 }

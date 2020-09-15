@@ -1,0 +1,28 @@
+<ion-header [translucent]="true" >
+  <ion-toolbar class="header-modal">
+    <ion-title>
+      Status
+    </ion-title>
+      <ion-buttons slot="secondary">
+        <ion-button class="btn-close" (click)="fechar()">
+          <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <ion-item> 
+      {{valor}}
+    </ion-item>
+    <ion-item> 
+      {{Temperatura}}
+    </ion-item>
+    <ion-item> 
+      {{Umidade}}
+    </ion-item>
+    <ion-item> 
+      {{Luminosidade}}
+    </ion-item>
+  </ion-list>
+</ion-content>
