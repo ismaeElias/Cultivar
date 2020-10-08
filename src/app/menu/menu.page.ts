@@ -93,9 +93,10 @@ export class MenuPage {
           this.Umidade = data.substring(9, 14);
           this.Luminosidade = data.substring(16, 30);*/
 
-          let data = new Uint8Array(buffer)
+          // let data = new Uint8Array(buffer)
           this.ngZone.run(() => {
-            this.dadosArduino = data[0] + '';
+            //this.dadosArduino = data[0] + '';
+            this.dadosArduino = buffer;
           })
           //this.cdr.detectChanges();
         },
