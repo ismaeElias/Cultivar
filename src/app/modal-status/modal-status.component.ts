@@ -1,28 +1,51 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-
+declare var google;
 @Component({
   selector: 'app-modal-status',
   templateUrl: './modal-status.component.html',
   styleUrls: ['./modal-status.component.scss'],
 })
-export class ModalStatusComponent implements OnInit {
+export class ModalStatusComponent {
 
-  @Input() valor: string
-  Temperatura : string
-  Umidade : string
-  Luminosidade : string
-  constructor(public modalCtrl: ModalController) {}
+  @Input() valor: string;
+  @Input() temperatura: string;
+  @Input() umidade: string;
+  @Input() luminosidade: string;
+  
+  constructor(public modalCtrl: ModalController) {
+  }
 
   ngOnInit() { 
-    this.Temperatura      = this.valor.substring(2,7);
-    this.Umidade          = this.valor.substring(9,14);
-    this.Luminosidade     = this.valor.substring(16,30);
+
   }
 
   fechar() {
     this.modalCtrl.dismiss({
       'dismissed': true
     });
+  }
+  ionViewDidEnter() {
+    this.plotSimpleBarChart();
+  }
+
+  plotSimpleBarChart() {
+    var data = google.visualization.arrayToDataTable([
+      ['Label', 'Value'],
+      ['Temperatura',  parseFloat(this.temperatura)],
+      ['Umidade',      parseFloat(this.umidade)],
+      ['Luminosidade', parseFloat(this.luminosidade)]
+    ]);
+
+    var options = {
+      width: 400, height: 120,
+      redFrom: 90, redTo: 100,
+      yellowFrom:75, yellowTo: 90,
+      minorTicks: 5
+    };
+
+    var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+
+    chart.draw(data, options);
   }
 }

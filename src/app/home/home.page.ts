@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
  styleUrls: ['home.page.scss'],
 })
 export class HomePage {
- 
+
  unpairedDevices: any;
  pairedDevices: any;
  gettingDevices: boolean;
@@ -65,18 +65,18 @@ export class HomePage {
  async selectDevice(id: any) {
  
    const alert = await this.alertController.create({
-     header: 'Connect',
-     message: 'Do you want to connect with?',
+     header: 'Conectar ',
+     message: 'Deseja conectar ?',
      buttons: [
        {
-         text: 'Cancel',
-         role: 'cancel',
+         text: 'Cancelar',
+         role: 'cancelar',
          handler: () => {
-           console.log('Cancel clicked');
+           console.log('Cancelar');
          }
        },
        {
-         text: 'Connect',
+         text: 'Conectado',
          handler: () => {
            this.bluetoothSerial.connect(id).subscribe(this.success, this.fail);
          }
@@ -88,7 +88,7 @@ export class HomePage {
  
  deviceConnected() {
    this.bluetoothSerial.isConnected().then(success => {
-     alert('Connected Successfullly');
+    alert('Conectado com sucesso!');
      this.routeMenu();
    }, error => {
      alert('error' + JSON.stringify(error));
@@ -97,18 +97,18 @@ export class HomePage {
  
  async disconnect() {
    const alert = await this.alertController.create({
-     header: 'Disconnect?',
-     message: 'Do you want to Disconnect?',
+     header: 'Desconectar ?',
+     message: 'Você deseja desconectar ?',
      buttons: [
        {
-         text: 'Cancel',
-         role: 'cancel',
+         text: 'Cancelar',
+         role: 'cancelar',
          handler: () => {
-           console.log('Cancel clicked');
+           console.log('Cancelado');
          }
        },
        {
-         text: 'Disconnect',
+         text: 'Desconectar',
          handler: () => {
            this.bluetoothSerial.disconnect();
          }
