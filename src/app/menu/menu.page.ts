@@ -1,7 +1,6 @@
 import { Component, ChangeDetectorRef, NgZone } from '@angular/core';
 import { BluetoothSerial } from '@ionic-native/bluetooth-serial/ngx';
 import { ModalController, ToastController } from '@ionic/angular';
-import { ModalStatusComponent } from '../modal-status/modal-status.component';
 
 declare var google;
 
@@ -19,9 +18,9 @@ export class MenuPage {
   readOk: boolean;
   dadosArduino: string;
 
-  Temperatura: string
-  Umidade: string
-  Luminosidade: string
+  Temperatura: string  = '0';
+  Umidade: string      = '0';
+  Luminosidade: string = '0';
 
 
 
@@ -30,22 +29,27 @@ export class MenuPage {
     public modalController: ModalController,
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone) {
-    this.Temperatura = '0';
-    this.Umidade = '0';
-    this.Luminosidade = '0'
+
   }
   // Ao iniciar inicia um timeout para ficar lendo [Pendente]
   ngOnInit() {
+    this.readData();
+    this.plotSimpleBarChart();
+    /*let self = this;
     this.bluetoothSerial.write('MostrarStatus');
     setTimeout(() => {
-      this.readData();
-    }, 250)
+      self.readData();
+    }, 250)*/
   }
-
+  ionViewDidEnter() {
+    this.plotSimpleBarChart();
+  }
   // Envia mensagem para o arduino e mostra informação [OK]
   async showStatus() {
-    this.bluetoothSerial.write('MostrarStatus');
-    alert(this.dadosArduino);
+    this.readData();
+    
+    //this.bluetoothSerial.write('MostrarStatus');
+    // alert(this.dadosArduino);
     /*const modal = await this.modalController.create({
       component: ModalStatusComponent,
       componentProps: {
@@ -85,20 +89,18 @@ export class MenuPage {
   }
   // Le informação do arduino [+/-] Está lendo porém só mostra a primeira leitura.
   async readData() {
+    this.bluetoothSerial.write('MostrarStatus');
     this.bluetoothSerial.isConnected()
       .then(data => {
         this.bluetoothSerial.read().then(buffer => {
-          // this.dadosArduino = buffer  
-          /*this.Temperatura = data.substring(2, 7);
-          this.Umidade = data.substring(9, 14);
-          this.Luminosidade = data.substring(16, 30);*/
 
-          // let data = new Uint8Array(buffer)
           this.ngZone.run(() => {
-            //this.dadosArduino = data[0] + '';
             this.dadosArduino = buffer;
+            this.Temperatura = buffer.substring(2, 7);
+            this.Umidade = buffer.substring(9, 14);
+            this.Luminosidade = buffer.substring(16, 30);
+            this.plotSimpleBarChart();
           })
-          //this.cdr.detectChanges();
         },
           error => {
             this.output += "\r\nRead Error : " + JSON.stringify(error);
@@ -114,9 +116,9 @@ export class MenuPage {
   plotSimpleBarChart() {
     var data = google.visualization.arrayToDataTable([
       ['Label', 'Value'],
-      ['Temperatura', this.Temperatura],
-      ['Umidade', this.Umidade],
-      ['Luminosidade', this.Luminosidade]
+      ['Temperatura', parseFloat(this.Temperatura)],
+      ['Umidade', parseFloat(this.Umidade)],
+      ['Luminosidade', parseFloat(this.Luminosidade)]
     ]);
 
     var options = {
@@ -130,7 +132,4 @@ export class MenuPage {
 
     chart.draw(data, options);
   }
-
-
-
 }
